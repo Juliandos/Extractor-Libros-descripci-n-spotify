@@ -40,17 +40,6 @@ def realizar_busqueda():
         # Esperar unos segundos para que se carguen los resultados
         time.sleep(5)
 
-        # # (Opcional) Realizar una nueva búsqueda o interactuar con los resultados
-        # # Por ejemplo: iniciar una nueva búsqueda escribiendo algo más en la barra
-        # nueva_frase = "Impacto de chatGPT en motores de búsqueda"
-        # nueva_barra_busqueda = driver.find_element(By.NAME, "q")
-        # nueva_barra_busqueda.clear()
-        # nueva_barra_busqueda.send_keys(nueva_frase)
-        # nueva_barra_busqueda.send_keys(Keys.RETURN)
-
-        # # Esperar unos segundos para ver los resultados de la nueva búsqueda
-        # time.sleep(5)
-
     finally:
         # Cerrar el navegador
         driver.quit()

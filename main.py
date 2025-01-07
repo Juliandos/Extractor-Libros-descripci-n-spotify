@@ -1,59 +1,19 @@
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
-import time
+import cohere
 
-def realizar_busqueda():
-    # Configurar el controlador de Selenium usando webdriver-manager
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+# Configura la API Key
+API_KEY = "QR1kux6RQUCRRol2rngWNIOV8fchdaXjrMt00D0K"
+co = cohere.Client(API_KEY)
 
-    try:
-        # Navegar a Google
-        driver.get("https://www.google.com")
+# Mensaje de entrada
+prompt = "En el siguiente texto encuentra los titulos de libros: $$$ Nos despedimos de Platón con una gran ración de recomendaciones para leer y comentarios valiosos de los oyentes. Ahora sí, el gran Aristóteles aparece en Filosofía de Bolsillo y lo hace para quedarse. 📥 ¡Sin diálogo no hay pensamiento! Escríbeme mensajes en forma de dudas, sugerencias, propuestas para próximas ediciones, o simplemente lo que se te pase por la cabeza a correofilosofiadebolsillo@gmail.com así como a través de esta y otras RRSS como Twitter o Instagram. ➡️ Puedes seguir FILOSOFÍA DE BOLSILLO en las principales plataformas como Spotify, iVoox, Apple Podcasts, Google Podcasts o Youtube.$$$ El formato de salida debe ser el siguiente: Autor - Titulo del libro, solamente debe ser ese formato de salida, no quiero ninguna otra cosa en la respuesta, si no hay me lo dejas saber, Por ejemplo 1. Immanuel Kant - Crítica a la razón pura"
 
-        # Esperar un momento para asegurarse de que la página cargue completamente
-        time.sleep(1)
+# Genera una respuesta con el modelo de Cohere
+response = co.generate(
+    model='command-xlarge-nightly',  # Modelo gratuito (puede variar según el plan)
+    prompt=prompt,
+    max_tokens=50,  # Limita la longitud de la respuesta
+    temperature=0.7,  # Controla la creatividad de la respuesta
+)
 
-        # Aceptar cookies si aparece el cuadro de diálogo
-        try:
-            aceptar_cookies = driver.find_element(By.XPATH, "//button[contains(text(), 'Acepto') or contains(text(), 'Aceptar todo')]")
-            aceptar_cookies.click()
-            time.sleep(1)  # Esperar a que se cierre el cuadro
-        except:
-            pass  # Ignorar si no aparece el cuadro de cookies
-
-        # Encontrar la barra de búsqueda
-        barra_busqueda = driver.find_element(By.NAME, "q")
-
-        # Escribir la frase clave
-        frase_clave = "¿Es Google hoy en día, despues de la aparición de chatGPT, las nuevas páginas amarillas?"
-        barra_busqueda.send_keys(frase_clave)
-
-        # Enviar la búsqueda
-        barra_busqueda.send_keys(Keys.RETURN)
-
-        #ventana maximizada
-        driver.maximize_window()
-
-        # Esperar unos segundos para que se carguen los resultados
-        time.sleep(5)
-
-        # # (Opcional) Realizar una nueva búsqueda o interactuar con los resultados
-        # # Por ejemplo: iniciar una nueva búsqueda escribiendo algo más en la barra
-        # nueva_frase = "Impacto de chatGPT en motores de búsqueda"
-        # nueva_barra_busqueda = driver.find_element(By.NAME, "q")
-        # nueva_barra_busqueda.clear()
-        # nueva_barra_busqueda.send_keys(nueva_frase)
-        # nueva_barra_busqueda.send_keys(Keys.RETURN)
-
-        # # Esperar unos segundos para ver los resultados de la nueva búsqueda
-        # time.sleep(5)
-
-    finally:
-        # Cerrar el navegador
-        driver.quit()
-
-if __name__ == "__main__":
-    realizar_busqueda()
+# Muestra la respuesta generada
+print("Respuesta de la IA:", response.generations[0].text.strip())
